@@ -70,7 +70,6 @@ app.post("/storestudents", (req, res) => {
           }
         )
       );
-      con.end();
     });
   } else {
     console.log("Missing a parameter");
@@ -85,8 +84,6 @@ app.get("/liststudents", (req, res) => {
       if (err) console.log(err);
       if (result) res.send(result);
     });
-
-    con.end();
   });
 });
 
