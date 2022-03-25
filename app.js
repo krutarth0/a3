@@ -92,6 +92,7 @@ app.get("/clear", (req, res) => {
     if (err) console.log(err);
     con.query("TRUNCATE TABLE a3data.students");
   });
+  res.send("Table cleared");
 });
 
 app.get("/create", (req, res) => {
