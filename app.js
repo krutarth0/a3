@@ -19,7 +19,7 @@ const secretString = new Promise((resolve, reject) => {
   client.getSecretValue({ SecretId: secretName }, function (err, data) {
     if (err) {
       console.log(err);
-      reject(errr);
+      reject(err);
       throw err;
     } else {
       if ("SecretString" in data) {
