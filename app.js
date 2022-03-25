@@ -82,25 +82,12 @@ app.post("/storestudents", (req, res) => {
 app.get("/liststudents", (req, res) => {
   con.connect(function (err) {
     con.query(`SELECT * FROM a3data.students`, function (err, result, fields) {
-      if (err) res.send(err);
+      if (err) console.log(err);
       if (result) res.send(result);
     });
 
     con.end();
   });
-
-  // const students = [
-  //   {
-  //     first_name: "rob",
-  //     last_name: "robbie",
-  //     banner: "dummybanner",
-  //   },
-  //   {
-  //     first_name: "rob2",
-  //     last_name: "robbie2",
-  //     banner: "dummybanner2",
-  //   },
-  // ];
 });
 
 app.listen(port, () => {
