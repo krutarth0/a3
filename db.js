@@ -1,6 +1,6 @@
 const mysql = require("mysql");
 
-export const con = mysql.createConnection({
+const con = mysql.createConnection({
   host: "a3-db.copy3vmktcqp.us-east-1.rds.amazonaws.com",
   user: "B00896235",
   password: "FMCyh3UhGFAJEy8D",

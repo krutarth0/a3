@@ -1,8 +1,15 @@
 const express = require("express");
+const mysql = require("mysql");
+const dbcon = require("./db.js");
+
 const app = express();
 const port = 3000;
 
-const dbcon = require("db.js");
+const con = mysql.createConnection({
+  host: "a3-db.copy3vmktcqp.us-east-1.rds.amazonaws.com",
+  user: "B00896235",
+  password: "FMCyh3UhGFAJEy8D",
+});
 
 app.use(express.json());
 
@@ -11,40 +18,47 @@ app.get("/", (req, res) => {
 });
 
 app.post("/storestudents", (req, res) => {
-  console.log(req.body());
+  const students = req.body.students;
+  if (req.query.students) {
+    console.log("Request received, working on it");
+    con.connect(function (err) {
+      students.forEach((element) =>
+        con.query(
+          `INSERT INTO a3data.students (first_name, last_name, banner) VALUES ('${element.first_name}', '${element.last_name}', '${element.banner}')`,
+          function (err, result, fields) {
+            if (err) res.send(err);
+            if (result) if (fields) console.log(fields);
+          }
+        )
+      );
+    });
+  } else {
+    console.log("Missing a parameter");
+  }
+  console.log(...students);
   res.send("students added successfully");
 });
 
 app.get("/liststudents", (req, res) => {
-  dbcon.connect(function (err) {
-    if (err) throw err;
-    console.log("Connected!");
-
-    con.query("CREATE DATABASE IF NOT EXISTS a3data;");
-    con.query("USE a3data;");
-    con.query(
-      "CREATE TABLE IF NOT EXISTS students(id int NOT NULL AUTO_INCREMENT, first_name varchar(100), last_name varchar(100), banner varchar(20), PRIMARY KEY(id));",
-      function (error, result, fields) {
-        console.log(result);
-      }
-    );
-    con.end();
+  con.connect(function (err) {
+    con.query(`SELECT * FROM a3data.students`, function (err, result, fields) {
+      if (err) res.send(err);
+      if (result) res.send(result);
+    });
   });
 
-  const students = [
-    {
-      first_name: "rob",
-      last_name: "robbie",
-      banner: "dummybanner",
-    },
-    {
-      first_name: "rob2",
-      last_name: "robbie2",
-      banner: "dummybanner2",
-    },
-  ];
-
-  res.send(students);
+  // const students = [
+  //   {
+  //     first_name: "rob",
+  //     last_name: "robbie",
+  //     banner: "dummybanner",
+  //   },
+  //   {
+  //     first_name: "rob2",
+  //     last_name: "robbie2",
+  //     banner: "dummybanner2",
+  //   },
+  // ];
 });
 
 app.listen(port, () => {
