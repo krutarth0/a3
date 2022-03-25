@@ -55,7 +55,7 @@ app.get("/", (req, res) => {
 
 app.post("/storestudents", (req, res) => {
   const students = req.body.students;
-  console.log(req.body);
+  // console.log(req.body);
   if (students) {
     console.log("Request received, working on it");
     con.connect(function (err) {
@@ -68,11 +68,12 @@ app.post("/storestudents", (req, res) => {
           }
         )
       );
+      con.end();
     });
   } else {
     console.log("Missing a parameter");
   }
-  console.log(...students);
+  // console.log(...students);
   res.send("students added successfully");
 });
 
@@ -82,6 +83,8 @@ app.get("/liststudents", (req, res) => {
       if (err) res.send(err);
       if (result) res.send(result);
     });
+
+    con.end();
   });
 
   // const students = [
