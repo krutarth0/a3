@@ -88,10 +88,7 @@ app.get("/liststudents", (req, res) => {
 });
 
 app.get("/clear", (req, res) => {
-  con.connect(function (err) {
-    if (err) console.log(err);
-    con.query("TRUNCATE TABLE a3data.students");
-  });
+  con.query("TRUNCATE TABLE a3data.students");
   res.send("Table cleared");
 });
 
