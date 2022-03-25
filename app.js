@@ -39,12 +39,14 @@ var ThisSecret = async (promise) => {
 
 var con;
 ThisSecret(secretString).then((data) => {
-  console.log("inside con===>", data.host, data.username, data.password);
-  con = mysql.createConnection({
-    host: data.host,
-    user: data.username,
-    password: data.password,
-  });
+  if (data) {
+    console.log("inside con===>", data.host, data.username, data.password);
+    con = mysql.createConnection({
+      host: data.host,
+      user: data.username,
+      password: data.password,
+    });
+  }
 });
 
 app.use(express.json());
