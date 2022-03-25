@@ -11,7 +11,6 @@ var AWS = require("aws-sdk"),
 
 const app = express();
 const port = 3000;
-app.use(express.json());
 
 var client = new AWS.SecretsManager({
   region: region,
@@ -38,67 +37,68 @@ var ThisSecret = async (promise) => {
   return data;
 };
 
+var con;
 ThisSecret(secretString).then((data) => {
-  console.log("inside con===>", data);
-  const con = mysql.createConnection({
+  console.log("inside con===>", data.host, data.username, data.password);
+  con = mysql.createConnection({
     host: data.host,
     user: data.username,
     password: data.password,
   });
+});
 
-  app.get("/", (req, res) => {
-    res.send("Hello World!");
-  });
+app.use(express.json());
 
-  app.post("/storestudents", (req, res) => {
-    const students = req.body.students;
-    // console.log(req.body);
-    if (students) {
-      console.log("Request received, working on it");
-      con.connect(function (err) {
-        students.forEach((element) =>
-          con.query(
-            `INSERT INTO a3data.students (first_name, last_name, banner) VALUES ('${element.first_name}', '${element.last_name}', '${element.banner}')`,
-            function (err, result, fields) {
-              if (err) res.send(err);
-              if (result) if (fields) console.log(fields);
-            }
-          )
-        );
-        con.end();
-      });
-    } else {
-      console.log("Missing a parameter");
-    }
-    // console.log(...students);
-    res.send("students added successfully");
-  });
-  app.get("/liststudents", (req, res) => {
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
+
+app.post("/storestudents", (req, res) => {
+  const students = req.body.students;
+  // console.log(req.body);
+  if (students) {
+    console.log("Request received, working on it");
     con.connect(function (err) {
-      con.query(
-        `SELECT * FROM a3data.students`,
-        function (err, result, fields) {
-          if (err) res.send(err);
-          if (result) res.send(result);
-        }
+      students.forEach((element) =>
+        con.query(
+          `INSERT INTO a3data.students (first_name, last_name, banner) VALUES ('${element.first_name}', '${element.last_name}', '${element.banner}')`,
+          function (err, result, fields) {
+            if (err) res.send(err);
+            if (result) if (fields) console.log(fields);
+          }
+        )
       );
-
       con.end();
     });
+  } else {
+    console.log("Missing a parameter");
+  }
+  // console.log(...students);
+  res.send("students added successfully");
+});
 
-    // const students = [
-    //   {
-    //     first_name: "rob",
-    //     last_name: "robbie",
-    //     banner: "dummybanner",
-    //   },
-    //   {
-    //     first_name: "rob2",
-    //     last_name: "robbie2",
-    //     banner: "dummybanner2",
-    //   },
-    // ];
+app.get("/liststudents", (req, res) => {
+  con.connect(function (err) {
+    con.query(`SELECT * FROM a3data.students`, function (err, result, fields) {
+      if (err) res.send(err);
+      if (result) res.send(result);
+    });
+
+    con.end();
   });
+
+  // const students = [
+  //   {
+  //     first_name: "rob",
+  //     last_name: "robbie",
+  //     banner: "dummybanner",
+  //   },
+  //   {
+  //     first_name: "rob2",
+  //     last_name: "robbie2",
+  //     banner: "dummybanner2",
+  //   },
+  // ];
 });
 
 app.listen(port, () => {
