@@ -19,6 +19,7 @@ app.get("/", (req, res) => {
 
 app.post("/storestudents", (req, res) => {
   const students = req.body.students;
+  console.log(req.body);
   if (req.body.students) {
     console.log("Request received, working on it");
     con.connect(function (err) {
