@@ -41,9 +41,9 @@ var con;
 ThisSecret(secretString).then((data) => {
   console.log("inside con===>", data);
   con = mysql.createConnection({
-    host: "a3-db.copy3vmktcqp.us-east-1.rds.amazonaws.com",
-    user: "B00896235",
-    password: "FMCyh3UhGFAJEy8D",
+    host: data.host,
+    user: data.user,
+    password: data.password,
   });
 });
 
