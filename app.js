@@ -1,14 +1,50 @@
 const express = require("express");
 const mysql = require("mysql");
-const dbcon = require("./db.js");
+require("dotenv").config();
+
+var AWS = require("aws-sdk"),
+  region = "us-east-1",
+  secretName =
+    "arn:aws:secretsmanager:us-east-1:443785020005:secret:a3-RDS-secrets-2oW8ko",
+  secret,
+  decodedBinarySecret;
 
 const app = express();
 const port = 3000;
 
-const con = mysql.createConnection({
-  host: "a3-db.copy3vmktcqp.us-east-1.rds.amazonaws.com",
-  user: "B00896235",
-  password: "FMCyh3UhGFAJEy8D",
+var client = new AWS.SecretsManager({
+  region: region,
+});
+const secretString = new Promise((resolve, reject) => {
+  client.getSecretValue({ SecretId: secretName }, function (err, data) {
+    if (err) {
+      console.log(err);
+      reject(errr);
+      throw err;
+    } else {
+      if ("SecretString" in data) {
+        // console.log(data.SecretString);
+        resolve(data.SecretString);
+
+        // console.log(secret);
+      }
+    }
+  });
+});
+
+var ThisSecret = async (promise) => {
+  const data = await promise;
+  return data;
+};
+
+var con;
+ThisSecret(secretString).then((data) => {
+  console.log("inside con===>", data);
+  con = mysql.createConnection({
+    host: "a3-db.copy3vmktcqp.us-east-1.rds.amazonaws.com",
+    user: "B00896235",
+    password: "FMCyh3UhGFAJEy8D",
+  });
 });
 
 app.use(express.json());
