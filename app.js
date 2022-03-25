@@ -60,17 +60,15 @@ app.post("/storestudents", (req, res) => {
   // console.log(req.body);
   if (students) {
     console.log("Request received, working on it");
-    con.connect(function (err) {
-      students.forEach((element) =>
-        con.query(
-          `INSERT INTO a3data.students (first_name, last_name, banner) VALUES ('${element.first_name}', '${element.last_name}', '${element.banner}')`,
-          function (err, result, fields) {
-            if (err) res.send(err);
-            if (result) if (fields) console.log(fields);
-          }
-        )
-      );
-    });
+    students.forEach((element) =>
+      con.query(
+        `INSERT INTO a3data.students (first_name, last_name, banner) VALUES ('${element.first_name}', '${element.last_name}', '${element.banner}')`,
+        function (err, result, fields) {
+          if (err) res.send(err);
+          if (result) if (fields) console.log(fields);
+        }
+      )
+    );
   } else {
     console.log("Missing a parameter");
   }
@@ -79,11 +77,9 @@ app.post("/storestudents", (req, res) => {
 });
 
 app.get("/liststudents", (req, res) => {
-  con.connect(function (err) {
-    con.query(`SELECT * FROM a3data.students`, function (err, result, fields) {
-      if (err) console.log(err);
-      if (result) res.send(result);
-    });
+  con.query(`SELECT * FROM a3data.students`, function (err, result, fields) {
+    if (err) console.log(err);
+    if (result) res.send(result);
   });
 });
 
@@ -93,19 +89,15 @@ app.get("/clear", (req, res) => {
 });
 
 app.get("/create", (req, res) => {
-  con.connect(function (err) {
-    if (err) throw err;
-    console.log("Connected!");
-
-    con.query("CREATE DATABASE IF NOT EXISTS a3data;");
-    con.query("USE a3data;");
-    con.query(
-      "CREATE TABLE IF NOT EXISTS students(id int NOT NULL AUTO_INCREMENT, first_name varchar(100), last_name varchar(100), banner varchar(20), PRIMARY KEY(id));",
-      function (error, result, fields) {
-        console.log(result);
-      }
-    );
-  });
+  console.log("Connected!");
+  con.query("CREATE DATABASE IF NOT EXISTS a3data;");
+  con.query("USE a3data;");
+  con.query(
+    "CREATE TABLE IF NOT EXISTS students(id int NOT NULL AUTO_INCREMENT, first_name varchar(100), last_name varchar(100), banner varchar(20), PRIMARY KEY(id));",
+    function (error, result, fields) {
+      console.log(result);
+    }
+  );
 });
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
