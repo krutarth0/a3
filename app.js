@@ -20,7 +20,7 @@ app.get("/", (req, res) => {
 app.post("/storestudents", (req, res) => {
   const students = req.body.students;
   console.log(req.body);
-  if (req.body.students) {
+  if (students) {
     console.log("Request received, working on it");
     con.connect(function (err) {
       students.forEach((element) =>
