@@ -42,7 +42,7 @@ ThisSecret(secretString).then((data) => {
   console.log("inside con===>", data);
   const con = mysql.createConnection({
     host: data.host,
-    user: data.user,
+    user: data.username,
     password: data.password,
   });
 
